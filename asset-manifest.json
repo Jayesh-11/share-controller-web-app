@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/share-controller-web-app/static/css/main.e6c13ad2.css",
+    "main.js": "/share-controller-web-app/static/js/main.f2ddc4db.js",
+    "index.html": "/share-controller-web-app/index.html",
+    "main.e6c13ad2.css.map": "/share-controller-web-app/static/css/main.e6c13ad2.css.map",
+    "main.f2ddc4db.js.map": "/share-controller-web-app/static/js/main.f2ddc4db.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.f2ddc4db.js"
+  ]
+}
