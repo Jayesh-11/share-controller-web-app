@@ -22,6 +22,8 @@ function App() {
   const [defaultGroupData, setDefaultGroupData] = useState(group_data);
   const [search, setSearch] = useState("");
   const [popUpState, setPopUpState] = useState(false);
+  const [currentAccess, setCurrentAccess] = useState(null);
+  const accessList = ["Full access", "Can edit", "Can view", "No access"];
 
   const searchPeopleHandler = () => {
     const searchPeopleData = defaultPeopleData.filter((item) => {
@@ -106,6 +108,25 @@ function App() {
     }, 1000);
   };
 
+  const changeAccessHandler = (passedId, accessItem) => {
+    const updatedPeopleData = defaultPeopleData.map((item) => {
+      if (passedId === item.id) {
+        return { ...item, accessPermisson: accessItem };
+      } else {
+        return item;
+      }
+    });
+    const updatedPeopleDataForShow = mutablePeopleData.map((item) => {
+      if (passedId === item.id) {
+        return { ...item, accessPermisson: accessItem };
+      } else {
+        return item;
+      }
+    });
+    setDefaultPeopleData(updatedPeopleData);
+    setMutablePeopleData(updatedPeopleDataForShow);
+  };
+
   return (
     <PrimaryDiv className="App">
       {popUpState ? (
@@ -127,7 +148,7 @@ function App() {
           <ShareDialouge>
             <InfoSecShare1>
               <InfoSecShare1Div1>
-                <FaGlobeAfrica />
+                <FaGlobeAfrica size="1.5rem" />
                 <InfoSecShare1Div2>
                   <H4>Share to web</H4>
                   <P1>Publish and share link with anyone</P1>
@@ -138,12 +159,16 @@ function App() {
                   onClick={() => {
                     setIsToggleButtonClicked(false);
                   }}
+                  size="1.5rem"
+                  cursor="pointer"
                 />
               ) : (
                 <BsToggleOff
                   onClick={() => {
                     setIsToggleButtonClicked(true);
                   }}
+                  size="1.5rem"
+                  cursor="pointer"
                 />
               )}
             </InfoSecShare1>
@@ -243,7 +268,32 @@ function App() {
                         >
                           {item.isSelected}
                         </SelectButton>
-                        <AccessBar>{item.accessPermisson}</AccessBar>
+                        <AccessSection>
+                          <AccessButton
+                            onClick={() => {
+                              currentAccess === item.id
+                                ? setCurrentAccess(null)
+                                : setCurrentAccess(item.id);
+                            }}
+                          >
+                            {item.accessPermisson}
+                          </AccessButton>
+                          {currentAccess === item.id
+                            ? accessList.map((accessItem) => {
+                                return (
+                                  <AccessListItem
+                                    onClick={() => {
+                                      setCurrentAccess(null);
+                                      changeAccessHandler(item.id, accessItem);
+                                      console.log(defaultPeopleData);
+                                    }}
+                                  >
+                                    {accessItem}
+                                  </AccessListItem>
+                                );
+                              })
+                            : null}
+                        </AccessSection>
                       </UserAccessData>
                     </PeopleListItem>
                   );
@@ -251,7 +301,7 @@ function App() {
               </SearchList>
             </PeopleSearchSection>
             <GroupSearchSection>
-              <H4>Groups</H4>
+              <H4 style={{ borderTop: "solid 2px" }}>Groups</H4>
               <SearchList>
                 {mutableGroupData.map((item) => {
                   return (
@@ -296,7 +346,7 @@ function App() {
                 <P1>learn about sharing</P1>
               </InfoSecShare1Div2>
             </InfoSecShare1Div1>
-            <BsLink45Deg />
+            <BsLink45Deg cursor="pointer" />
           </InfoSecShare2>
         ) : null}
       </PrimaryContainer>
@@ -337,31 +387,33 @@ const PrimaryContainer = styled.div`
   height: 64.5vh;
   width: 20rem;
   margin: 0;
-  padding: 0;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: baseline;
   align-items: center;
-  background-color: #ff0000;
+  background-color: transparent;
   gap: 1rem;
+  border: solid 0.1rem;
+  border-radius: 1rem;
 `;
 
 const ShareDialouge = styled.div`
   width: 100%;
   height: 12vh;
-  background-color: #c3c3c3;
+  background-color: transparent;
 `;
 
 const SearchedDialouge = styled.div`
   width: 100%;
   height: 35vh;
-  background-color: #309f48;
+  background-color: transparent;
 `;
 
 const SearchBoxSection = styled.div`
   width: 100%;
   height: 6vh;
-  background-color: #309f48;
+  background-color: transparent;
   display: flex;
   flex-direction: row;
   justify-content: baseline;
@@ -371,7 +423,7 @@ const SearchBoxSection = styled.div`
 const InfoSecShare1 = styled.div`
   width: 100%;
   height: 8.5vh;
-  background-color: #6b9374;
+  background-color: transparent;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -381,7 +433,7 @@ const InfoSecShare1 = styled.div`
 const InfoSecShare2 = styled.div`
   width: 100%;
   height: 5vh;
-  background-color: #323bb8;
+  background-color: transparent;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -409,7 +461,7 @@ const CurrentSelectionSection = styled.div`
   display: flex;
   justify-content: baseline;
   align-items: center;
-  background-color: blue;
+  background-color: transparent;
   overflow-x: scroll;
   ::-webkit-scrollbar {
     display: none;
@@ -445,7 +497,7 @@ const SearchList = styled.div`
 `;
 
 const SelectedList = styled.div`
-  background-color: #a94e4e;
+  background-color: transparent;
   display: flex;
   flex-direction: row;
   justify-content: baseline;
@@ -472,7 +524,13 @@ const GroupDataLeft = styled.div`
   align-items: center;
   gap: 1rem;
 `;
-const UserAccessData = styled.div``;
+
+const UserAccessData = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+`;
 
 const GroupListItem = styled.div`
   display: flex;
@@ -489,7 +547,9 @@ const SelectedListItem = styled.div`
   align-items: center;
   margin: 0;
   margin-right: 0.3rem;
-  background-color: pink;
+  background-color: transparent;
+  border: solid 1px;
+  border-radius: 0.5rem;
 `;
 
 const PopUpDiv = styled.div`
@@ -502,11 +562,35 @@ const PopUpDiv = styled.div`
   position: fixed;
 `;
 
+const AccessListItem = styled.div`
+  display: flex;
+  justify-content: baseline;
+  align-items: center;
+  padding-left: 0.35rem;
+  padding-top: 0.1rem;
+  font-size: 0.7rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  width: 80%;
+  border-radius: 0.2rem;
+  cursor: pointer;
+`;
+
+const AccessSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: baseline;
+  align-items: baseline;
+  gap: 0.2rem;
+`;
+
 //*********** Styled Input ***********
 
 const InputSectionToClick = styled.input`
   height: 85%;
   width: 80%;
+  border-radius: 0.5rem;
+  border: solid 1px;
+  padding-left: 1rem;
 `;
 
 //*********** Styled Button ***********
@@ -523,11 +607,27 @@ const InviteButton = styled.button`
 
 const CancelButton = styled.button`
   margin: 0.5rem;
+  background-color: transparent;
+  outline: none;
+  border: none;
+  margin-right: 0;
+  cursor: pointer;
 `;
 
-const SelectButton = styled.button``;
+const SelectButton = styled.button`
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+`;
 
-const AccessBar = styled.button``;
+const AccessButton = styled.button`
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+`;
 
 //*********** Styled Heading ***********
 
