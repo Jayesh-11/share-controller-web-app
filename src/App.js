@@ -384,7 +384,7 @@ const Share = styled.div`
 `;
 
 const PrimaryContainer = styled.div`
-  height: 64.5vh;
+  height: fit-content;
   width: 20rem;
   margin: 0;
   padding: 1rem;
@@ -396,6 +396,8 @@ const PrimaryContainer = styled.div`
   gap: 1rem;
   border: solid 0.1rem;
   border-radius: 1rem;
+  padding-top: 1.5rem;
+  padding-bottom: 2rem;
 `;
 
 const ShareDialouge = styled.div`
